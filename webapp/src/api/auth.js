@@ -1,16 +1,27 @@
 import CryptoJS from 'crypto-js';
 
 export async function loginUser({ username, password }) {
-    // Haszowanie has�a po stronie frontendu (dla przyk�adu; w praktyce stosowa� nale�y HTTPS).
-    // W realnym systemie i tak nale�y has�o weryfikowa� po stronie serwera!
+    // Hashowanie hasła
     const hashedPassword = CryptoJS.SHA256(password).toString();
 
-    // Poniżej symulacja weryfikacji - w normalnej aplikacji robi si� zapytanie do backendu
-    // i sprawdza zwr�cony wynik (np. token).
-    if (username === 'admin' && hashedPassword) {
-        // Zwracamy "udawany" token
-        return { token: 'fake-jwt-token', user: { username: 'admin' } };
-    } else {
-        throw new Error('Nieprawid�owe dane logowania');
+    try {
+        // Wysylka hasla nabackend
+        const response = await fetch("http://localhost:5173/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password: hashedPassword }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Nieprawidłowe dane logowania");
+        }
+
+        // Odbieranie tokena
+        const data = await response.json();
+        return { token: data.token, user: data.user };
+
+    } catch (error) {
+        console.error("Błąd logowania:", error);
+        throw error;
     }
 }

@@ -5,7 +5,7 @@ export async function loginUser({ username, password }) {
     const hashedPassword = CryptoJS.SHA256(password).toString();
 
     try {
-        // Wysylka hasla nabackend
+        // Wysylka hasla na backend
         const response = await fetch("http://localhost:5173/api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

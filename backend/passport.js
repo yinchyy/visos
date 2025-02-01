@@ -1,6 +1,10 @@
 var LocalStrategy = require('passport-local');
-
+const {
+  createHash,
+  pbkdf2Sync
+} = require('node:crypto');
 const db = require('./db/database');
+var bcrypt = require('bcrypt');
 const { findEmployeeByLogin } = require('./db/createUser');
 
 module.exports = function(passport){
@@ -27,13 +31,13 @@ module.exports = function(passport){
     async (login, password, done) => {
 		try {
 			const findUser = await findEmployeeByLogin(login);
-			if (!findUser) throw new Error("User not found");
-			// if (!comparePassword(password, findUser.password))
-			if (false)
-				throw new Error("Bad Credentials");
-			done(null, findUser);
-		} catch (err) {
-			done(err, null);
+			if (!findUser) return done(null,false, { message: 'Invalid username or password '})
+      if (!bcrypt.compareSync(password,findUser.password)) {
+        return done(null, false, { message: 'Incorrect username or password.' });
+      }
+      return done(null, findUser);
+    } catch (err) {
+      done(err, null);
 		}
 	})
 );

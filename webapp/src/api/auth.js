@@ -6,10 +6,10 @@ export async function loginUser({ username, password }) {
 
     try {
         // Wysylka hasla na backend
-        const response = await fetch("http://localhost:5173/api/login", {
+        const response = await fetch("http://localhost:5173/users/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password: hashedPassword }),
+            body: JSON.stringify({ login: username, password: "hashme" }),
         });
 
         if (!response.ok) {

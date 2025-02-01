@@ -1,28 +1,67 @@
 var LocalStrategy = require('passport-local');
 
-// const db = require('db/database');
+const db = require('./db/database');
+const { findEmployeeByLogin } = require('./db/createUser');
 
-module.exports = function (passport){
-  passport.use(new LocalStrategy(function verify(username, password, cb) {
-    db.get('SELECT * FROM employee WHERE login = $1', [ username ], function(err, user) {
-      if (err) { return cb(err); }
-      if (!user) { return cb(null, false, { message: 'Incorrect username or password.' }); }
-
-      crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
-        if (err) { return cb(err); }
-        if (!crypto.timingSafeEqual(user.hashed_password, hashedPassword)) {
-          return cb(null, false, { message: 'Incorrect username or password.' });
-        }
-        return cb(null, user);
-      });
-    });
-  }));
+module.exports = function(passport){
 
   passport.serializeUser((user, done) => {
-      done(null, user.id);
+    done(null, user.id);
   });
-  passport.deserializeUser((id, done) => {
-      const user = users.find(u => u.id === id);
-      done(null, user);
-    });
+  passport.deserializeUser(async (login, done) => {
+    try {
+			const findUser = await findEmployeeByLogin(login);
+      if (!findUser) throw new Error("User Not Found");
+      done(null, findUser);
+    } catch (err) {
+      done(err, null);
+    }
+  });
+
+ passport.use(
+	new LocalStrategy(
+    {
+      usernameField:"login",
+      passwordField:"password"
+    },
+    async (login, password, done) => {
+		try {
+			const findUser = await findEmployeeByLogin(login);
+			if (!findUser) throw new Error("User not found");
+			// if (!comparePassword(password, findUser.password))
+			if (false)
+				throw new Error("Bad Credentials");
+			done(null, findUser);
+		} catch (err) {
+			done(err, null);
+		}
+	})
+);
 }
+// module.exports = function (passport){
+//   passport.use(new LocalStrategy(function verify(login, password, cb) {
+//     db.get(`SELECT * FROM employee WHERE login = $1`, [ login ], function(err, user) {
+//       console.log(login)
+//       if (err) { 
+//         console.log(login)
+//         return cb(err); }
+//       if (!user) { return cb(null, false, { message: 'Incorrect username or password.' }); }
+
+//       crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+//         if (err) { return cb(err); }
+//         if (!crypto.timingSafeEqual(user.hashed_password, hashedPassword)) {
+//           return cb(null, false, { message: 'Incorrect username or password.' });
+//         }
+//         return cb(null, user);
+//       });
+//     });
+//   }));
+
+//   passport.serializeUser((user, done) => {
+//       done(null, user.id);
+//   });
+//   passport.deserializeUser((id, done) => {
+//       const user = users.find(u => u.id === id);
+//       done(null, user);
+//     });
+// }

@@ -11,12 +11,11 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
     try {
-      const response = await loginUser({ username, password });
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('username', response.user.username);
-      navigate('/reservations');
+      const response = await loginUser(username, password);
+      // localStorage.setItem('token', response.token);
+      // localStorage.setItem('username', response.user.username);
+      if (response.code === 200) navigate('/');
     } catch (err) {
       setError(err.message);
     }

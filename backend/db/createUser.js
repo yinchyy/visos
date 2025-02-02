@@ -19,8 +19,9 @@ async function createEmployee(name, surname, login, password, pesel) {
 
 async function getAllEmployees() {
     try {
-        const result = await db.any('SELECT * FROM employee');
+        const result = await db.any('SELECT id,name,surname,email FROM employee');
         console.log(result);
+        return result;
     } catch (error) {
         console.error('Error fetching users:', error);
     }

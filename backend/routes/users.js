@@ -12,11 +12,10 @@ const { findEmployeeByLogin, createEmployee, getAllEmployees } = require('../db/
 
 router.get('/',async(req,res) => {
   try{
-    const sessionCookie = req.cookies.session;
-    if(!sessionCookie){
-      return res.send("You need to log-in, to access this resource.");
+    if(!req.isAuthenticated()){
+      return res.send(401,"You need to log-in, to access this resource.");
     }
-    return res.json("Success");
+    return res.status(200);
   }catch(error){
     return res.json({error});
   }
@@ -38,17 +37,14 @@ router.get('/auth',async(req,res) => {
   }
 })
 
-router.get('/employee', async (req, res) => {
+router.get('/employees', async (req, res) => {
   try {
-    if(true){
+    if(req.isAuthenticated()){
     const result = await getAllEmployees()
-    // const result = await db.one(`SELECT * FROM employee WHERE login = 'janeq'`);
-    console.log(result)
-    return res.status(200).json(result);
-    // return res.status(200).json({success:"true"})
+    return res.json(result);
     }
     else{
-      res.redirect('../')
+      res.redirect('/users')
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -57,20 +53,14 @@ router.get('/employee', async (req, res) => {
 
 router.post('/employee/add', async (req, res) => {
   try {
-    data = req.body;
-    passport.authenticate('local', async function(err, user) {
-      if (user){
-        if (user.role === 3){
-          const result = await createEmployee(data.name,data.surname,data.login,data.password,data.pesel);
-          return res.status(200).json(result);
-        }else{
-          return res.send(400);
-        }
-      }else{
-        return res.send(400);
-      }
-
-    },(req, res, next));
+    if(req.isAuthenticated()){
+      data = req.body;
+      const result = await createEmployee(data.name,data.surname,data.login,data.password,data.pesel);
+      return res.status(200).json(result);
+    }
+    else{
+      return res.send(400);
+    }
   } catch (err) {
     res.status(500);
   }
@@ -93,7 +83,7 @@ router.get('/inituser',async(req,res) => {
 })
 
 router.get("/session", (req, res) => {
-  if (req.session.user) {
+  if (req.isAuthenticated()) {
       res.json({ session: req.session });
   } else {
       res.status(401).json({ message: "No active session" });

@@ -36,8 +36,7 @@ function AddReservation() {
     // Obsluga wyslania formularza
     const handleSubmit = (e) => {
         e.preventDefault();
-        // W realnej aplikacji: wywolanie do backendu np. fetch/axios
-        // Tutaj tylko poka¿emy alert z zebranymi danymi
+
         alert(`Dane nowej rezerwacji:
     Imie: ${firstName}
     Nazwisko: ${lastName}
@@ -51,7 +50,6 @@ function AddReservation() {
     Godzina przyjazdu: ${arrivalTime}
     Pokoje: ${rooms.join(', ')}
     `);
-        // Po zapisaniu mo¿na np. wrocic do listy
         navigate('/reservations');
     };
 

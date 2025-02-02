@@ -6,29 +6,28 @@ function ReservationDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // Tu w realnej aplikacji pobralbys dane np. z API wedlug `id`
-    // Dla przykladu symulujemy jedna rezerwacje:
+
     const [reservationData, setReservationData] = useState({
         id: id,
         clientName: 'Jan Kowalski',
         roomNumbers: [101, 102],
         status: 'Oczekujaca',
         scheduledDate: '2025-02-10',
-        // mo¿na dodac inne pola jak w AddReservation
+ 
         email: 'jan.kowalski@example.com',
         phone: '123456789',
     });
 
     const [editMode, setEditMode] = useState(false);
 
-    // Zmiana w polach (jesli edytujesz np. email, phone itp.)
+ 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setReservationData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSave = () => {
-        // W realnej aplikacji -> zapisz na serwerze
+
         alert(`Zapisano zmiany rezerwacji ID=${reservationData.id}`);
         setEditMode(false);
     };
@@ -89,7 +88,7 @@ function ReservationDetails() {
             <div style={{ marginBottom: '20px' }}>
                 <label>Pokoje: </label><br />
                 <p>{reservationData.roomNumbers.join(', ')}</p>
-                {/* Tu mo¿na by dodac edycje pokoi, analogicznie jak w AddReservation */}
+          
             </div>
 
             <div style={{ marginBottom: '20px' }}>
@@ -97,7 +96,7 @@ function ReservationDetails() {
                 <p>{reservationData.scheduledDate}</p>
             </div>
 
-            {/* Guziki */}
+           
             {!editMode && (
                 <button className="button" onClick={() => setEditMode(true)}>
                     Edytuj

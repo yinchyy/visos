@@ -94,7 +94,7 @@ function Reservations() {
                                   Szczegoly
                               </button>
 
-                              {/* Przycisk Zmien status -> proste menu rozwijane */}
+                            
                               <select
                                   onChange={(e) => handleChangeStatus(res.id, e.target.value)}
                                   value="" // bo zawsze ma sie pokazac placeholder

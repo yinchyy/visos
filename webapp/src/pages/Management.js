@@ -13,7 +13,7 @@ function Management() {
     
 
   const handleAddEmployee = () => {
-    // W realnej aplikacji wywo³anie do backendu, przekazanie newEmployeeName i newEmployeeRole
+
       alert(`Dodano pracownika: ${newEmployeeName}, rola: ${newEmployeeRole}`);
       setNewEmployeeLogin('');
       setNewEmployeeSurname('');

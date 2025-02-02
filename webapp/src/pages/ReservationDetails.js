@@ -6,29 +6,28 @@ function ReservationDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // Tu w realnej aplikacji pobra³byœ dane np. z API wed³ug `id`
-    // Dla przyk³adu symulujemy jedn¹ rezerwacjê:
+
     const [reservationData, setReservationData] = useState({
         id: id,
         clientName: 'Jan Kowalski',
         roomNumbers: [101, 102],
-        status: 'Oczekuj¹ca',
+        status: 'Oczekujï¿½ca',
         scheduledDate: '2025-02-10',
-        // mo¿na dodaæ inne pola jak w AddReservation
+      
         email: 'jan.kowalski@example.com',
         phone: '123456789',
     });
 
     const [editMode, setEditMode] = useState(false);
 
-    // Zmiana w polach (jeœli edytujesz np. email, phone itp.)
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setReservationData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSave = () => {
-        // W realnej aplikacji -> zapisz na serwerze
+       
         alert(`Zapisano zmiany rezerwacji ID=${reservationData.id}`);
         setEditMode(false);
     };
@@ -40,7 +39,7 @@ function ReservationDetails() {
 
     return (
         <div className="container">
-            <h2>Szczegó³y Rezerwacji (ID: {id})</h2>
+            <h2>Szczegï¿½y Rezerwacji (ID: {id})</h2>
             <div style={{ marginBottom: '20px' }}>
                 <label>Klient: </label><br />
                 {editMode ? (
@@ -89,7 +88,7 @@ function ReservationDetails() {
             <div style={{ marginBottom: '20px' }}>
                 <label>Pokoje: </label><br />
                 <p>{reservationData.roomNumbers.join(', ')}</p>
-                {/* Tu mo¿na by dodaæ edycjê pokoi, analogicznie jak w AddReservation */}
+            
             </div>
 
             <div style={{ marginBottom: '20px' }}>
@@ -97,7 +96,7 @@ function ReservationDetails() {
                 <p>{reservationData.scheduledDate}</p>
             </div>
 
-            {/* Guziki */}
+            
             {!editMode && (
                 <button className="button" onClick={() => setEditMode(true)}>
                     Edytuj
